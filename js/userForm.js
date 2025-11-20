@@ -6,14 +6,11 @@ document.querySelector(".form_container").addEventListener("submit", async (e) =
     console.log("Получено описание:", description);
 
     const data = {
-        user_text: description,  // Изменяем поле на то, что ожидает сервер
-        question_id: "form_question_1",  // Добавляем обязательные поля
-        question_text: "Описание маршрута",
-        timestamp: new Date().toISOString()
+        query: description
     };
 
     try {
-        const response = await fetch('https://team-6-render.onrender.com/submit', {  // Изменяем URL
+        const response = await fetch('https://team-6-render.onrender.com/submit', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,16 +23,9 @@ document.querySelector(".form_container").addEventListener("submit", async (e) =
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            const text = await response.text();
-            console.error('Expected JSON, got:', text.substring(0, 200));
-            throw new Error('Server returned non-JSON response');
-        }
-
         const result = await response.json();
-        localStorage.setItem('form_data', JSON.stringify(result));  // Исправляем ключ
-        window.location.href = 'answer.html';
+        console.log("Успешный ответ:", result);
+        localStorage.setItem('form_data', JSON.stringify(result));
         
     } catch (error) {
         console.error('Error:', error);
