@@ -38,5 +38,5 @@ def submit():
         logger.error(f"❌ Ошибка обработки: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
-if __name__ == '__main__':
-    flask_app.run(debug=True)
+if __name__ == "__main__":
+    flask_app.run(host="0.0.0.0", port=10000)
