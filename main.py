@@ -11,48 +11,51 @@ logger = logging.getLogger(__name__)
 flask_app = Flask(__name__) #CORS ошибки
 CORS(flask_app)
 
-@flask_app.route('/save_survey', methods=['POST'])
-def save_survey():
+@flask_app.route('/generate_route', methods=['POST'])
+def generate_route():
     try:
         data = request.json
         
-        user_text = data.get('user_text')
-        question_id = data.get('question_id') 
-        question_text = data.get('question_text')
-        timestamp = data.get('timestamp')
+        # Получаем описание из запроса
+        description = data.get('query')
         
-        logger.info("📝 ПОЛУЧЕН ОТВЕТ ОПРОСА:")
-        logger.info(f"   Вопрос: {question_text}")
-        logger.info(f"   Ответ: {user_text}")
-        logger.info(f"   ID вопроса: {question_id}")
-        logger.info(f"   Время: {timestamp}")
+        logger.info("🚗 ПОЛУЧЕН ЗАПРОС НА ГЕНЕРАЦИЮ МАРШРУТА:")
+        logger.info(f"   Описание: {description}")
         logger.info("=" * 50)
         
-        # Сохраняем в файл
-        with open('survey_responses.txt', 'a', encoding='utf-8') as f:
-            f.write(f"[{datetime.now()}] Q: {question_text}\n")
-            f.write(f"         A: {user_text}\n")
-            f.write(f"         ID: {question_id}\n")
-            f.write("-" * 40 + "\n")
+        # Здесь можно добавить логику генерации маршрута
+        # Пока просто сохраним как опрос
         
-        # JSON файл
         survey_data = {
             "timestamp": datetime.now().isoformat(),
-            "question": question_text,
-            "answer": user_text,
-            "question_id": question_id
+            "question": "Генерация маршрута",
+            "answer": description,
+            "question_id": "route_generation"
         }
+        
+        # Сохраняем в оба файла
+        with open('survey_responses.txt', 'a', encoding='utf-8') as f:
+            f.write(f"[{datetime.now()}] ГЕНЕРАЦИЯ МАРШРУТА\n")
+            f.write(f"         Описание: {description}\n")
+            f.write("-" * 40 + "\n")
         
         with open('survey_data.json', 'a', encoding='utf-8') as f:
             f.write(json.dumps(survey_data, ensure_ascii=False) + '\n')
         
+        # Возвращаем ответ для клиента
         return jsonify({
             "status": "success", 
-            "message": "Survey response saved"
+            "message": "Route request received",
+            "received_description": description,
+            "route_data": {
+                "points": ["Точка A", "Точка B"],
+                "distance": "5 km",
+                "duration": "1 hour"
+            }
         })
         
     except Exception as e:
-        logger.info(f"❌ Ошибка сохранения опроса: {e}")
+        logger.error(f"❌ Ошибка обработки маршрута: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
