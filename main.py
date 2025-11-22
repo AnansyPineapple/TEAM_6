@@ -78,6 +78,66 @@ class QueryDatabase:
 
 query_db = QueryDatabase()
 
+def build_task_for_ai(task_id, executor_reply):
+    conn = sqlite3.connect('querys.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT * FROM tasks WHERE complaint_id = ?', (task_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        return None
+
+    task = dict(row)
+    task["executor_reply"] = executor_reply  # 🔥 ДОБАВЛЯЕМ ОТВЕТ ИСПОЛНИТЕЛЯ
+
+    return task
+
+@flask_app.route('/send-to-ai', methods=['POST', 'OPTIONS'])
+def send_to_ai():
+    # 🔹 preflight request
+    if request.method == 'OPTIONS':
+        # отправляем успешный ответ для preflight
+        return jsonify({}), 200
+
+    # 🔹 POST request
+    data = request.json
+    task_id = data.get("task_id")
+    executor_reply = data.get("executor_reply", "")
+
+    task_full = build_task_for_ai(task_id, executor_reply)
+    if not task_full:
+        return jsonify({"error": "Task not found"}), 404
+
+    # 🔹 ИИ-заглушка
+    ai_processed_reply = f"ИИ переработал ответ исполнителя: {executor_reply}"
+    today_date = datetime.today().strftime("%Y-%m-%d")
+
+    # 🔹 обновление БД
+    conn = sqlite3.connect('querys.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE tasks SET 
+            status = ?,
+            resolution = ?,
+            execution_date = ?
+        WHERE complaint_id = ?
+    """, ("closed", ai_processed_reply, today_date, task_id))
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "status": "ok",
+        "message": "AI processed task successfully",
+        "ai_result": {
+            "new_status": "closed",
+            "resolution": ai_processed_reply,
+            "execution_date": today_date
+        }
+    })
+
 @flask_app.route('/send', methods=['POST', 'OPTIONS'])
 def send():
     if request.method == 'OPTIONS':

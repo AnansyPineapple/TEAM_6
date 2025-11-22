@@ -55,5 +55,23 @@ function openTaskInfo(taskId) {
     window.location.href = 'taskInfo.html';
 }
 
+document.getElementById("send-to-ai").addEventListener("click", async function() {
+    const taskId = localStorage.getItem('currentTaskId');
+    const reply = document.getElementById("executor_reply").value;
+
+    const response = await fetch("https://team-6-render.onrender.com/send-to-ai", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            task_id: taskId,
+            executor_reply: reply
+        })
+    });
+
+    const result = await response.json();
+    console.log("AI RESULT:", result);
+    alert("Ответ отправлен в ИИ!");
+});
+
 // Обновляем список каждые 30 секунд
 setInterval(loadTasks, 30000);
