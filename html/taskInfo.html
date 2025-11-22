@@ -7,111 +7,69 @@
   <title>Информация о заявке</title>
 </head>
 <body>
-    <header>
-      <div class="above_menu">
-          Smartpolis
-      </div>
-      <div class="user_info">
-          <div class="timer">
-              <span id="current-time">10:06:45</span>
-          </div>
-          <div class="nn_logo">
-              <div class="user_category">Модератор системы</div>
-          </div>
-      </div>
+  <header>
+    <div class="above_menu">Smartpolis</div>
+    <div class="user_info">
+      <div class="timer"><span id="current-time">10:06:45</span></div>
+      <div class="nn_logo"><div class="user_category">Модератор системы</div></div>
+    </div>
   </header>
   <section class="main">
-      <div class="menu">
-          <a class="menu_link main_header">Меню</a>
-          <a class="menu_link first">Городские проекты</a>
-      </div>
-      <div class="main_part">
-        <div class="container">
-            <div class="messages_header">
-              <div class="main_task_header">Сообщения</div>
-            </div>
-            <div class="task_prev_card">
-              <div class="task_prev_card_container_for_time">
-                <div class="task_prev_card_header">Карточка сообщения</div>
-                <div class="task_prev_card_time_cont">
-                  <div class="task_prev_card_time_card">
-                    <span>Срок исполнения:</span>
-                    <span class="time" id="execution-date">Загрузка...</span>
-                    <span class="time" id="time-remaining">Расчет...</span>
-                  </div>
-                  <div class="task_prev_card_time_card">
-                    <span>Нормативный срок:</span>
-                    <span class="time" id="deadline-date">Загрузка...</span>
-                    <span class="time" id="standard-time-remaining">Расчет...</span>
-                  </div>
+    <div class="menu">
+      <a class="menu_link main_header">Меню</a>
+      <a class="menu_link first">Городские проекты</a>
+    </div>
+    <div class="main_part">
+      <div class="container">
+        <div class="task_prev_card">
+          <div class="task_prev_card_container_for_ID">
+            <div class="id_name">Id</div>
+            <div class="id_inner"><span id="task-id">Загрузка...</span></div>
+          </div>
+        </div>
+
+        <div id="task-form" class="task_form">
+          <div class="main_form_cont">
+            <div class="place_for_form_data">
+              <div class="form-row">
+                <div class="field-label">ID заявки</div>
+                <div class="field-value" id="complaint_id_display">-</div>
+              </div>
+
+              <div class="form-row">
+                <div class="field-label">Статус</div>
+                <div class="field-value" id="status_display">-</div>
+              </div>
+
+              <div class="form-row">
+                <div class="field-label">Описание</div>
+                <div class="field-value" id="description_display">Загрузка...</div>
+              </div>
+
+              <div class="form-row">
+                <div class="field-label">Ответ исполнителя для ИИ</div>
+                <div class="field-value">
+                  <textarea id="executor_reply" rows="4" cols="50" placeholder="Введите ответ исполнителя..."></textarea>
                 </div>
               </div>
-              <div class="task_prev_card_container_for_ID">
-                  <div class="id_name">Id</div>
-                  <div class="id_inner">
-                    <span id="task-id">Загрузка...</span>
-                  </div>
-              </div>
-            </div>
-            <div id="task-form" class="task_form">
-              <div class="form_menu_categories">
-                <a href="#" class="form_menu_category active">Подробно</a>
-                <a href="#" class="form_menu_category">Адрес</a>
-                <a href="#" class="form_menu_category">Комментарии(<span id="comments-count">0</span>)</a>
-                <a href="#" class="form_menu_category">Обработка</a>
-                <a href="#" class="form_menu_category">История изменений</a>
-              </div>
-              <div class="main_form_cont">
-                <div class="main_form_header">
-                  <span>Действия с сообщением</span>
-                  <div class="place_for_form_button">
-                    <button type="button" class="back_to_filters" onclick="goBack()">
-                      Вернуться к списку
-                    </button>
-                  </div>
-                </div>
-                <div class="place_for_form_data">
-                  <div class="form-row">
-                    <div class="field-label">ID заявки</div>
-                    <div class="field-value" id="complaint_id_display">-</div>
-                  </div>
-                  
-                  <div class="form-row">
-                    <div class="field-label">Статус</div>
-                    <div class="field-value" id="status_display">-</div>
-                  </div>
-                  
-                  <div class="form-row">
-                    <div class="field-label">Описание</div>
-                    <div class="field-value" id="description_display">Загрузка...</div>
-                  </div>
-                  
-                  <div class="form-row">
-                    <div class="field-label">Дата создания</div>
-                    <div class="field-value" id="creation_date_display">-</div>
-                  </div>
-                  
-                  <div class="form-row">
-                    <div class="field-label">Срок выполнения</div>
-                    <div class="field-value" id="deadline_system_display">-</div>
-                  </div>
-                  
-                  <div class="form-row">
-                    <div class="field-label">Район</div>
-                    <div class="field-value" id="district_display">-</div>
-                  </div>
-                  
-                  <div class="form-row">
-                    <div class="field-label">Исполнитель</div>
-                    <div class="field-value" id="executor_display">-</div>
-                  </div>
+
+              <div class="form-row">
+                <div class="field-label">Действия</div>
+                <div class="field-value">
+                  <button id="send-to-ai-btn" type="button">Отправить в ИИ</button>
                 </div>
               </div>
+
+              <div class="form-row">
+                <div class="field-label">Срок выполнения (ИИ)</div>
+                <div class="field-value" id="deadline_system_display">-</div>
+              </div>
             </div>
+          </div>
         </div>
       </div>
+    </div>
   </section>
-
   <script src="../js/taskInfo.js"></script>
 </body>
 </html>
