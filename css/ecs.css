@@ -1,0 +1,46 @@
+@font-face {
+    font-family: "Helvetica Neue_Medium";
+    src: url(../assets/fonts/HelveticaNeue-Medium.otf);
+    font-weight: 400;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ECF0F5;
+    font-family: "Helvetica Neue_Medium";
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.inner_cont {
+    padding-top: 40px;
+    background-color: #fff;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    gap: 10px;
+    width: 90%;
+    max-width: 600px;
+    min-height: 500px;
+}
+.title {
+    margin-top: 50px;
+    font-size: 28px;
+}
+
+.requests_cont {
+    margin: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.requests_cont a {
+    display: block;
+    text-decoration: none;
+    color: black;
+
+}
