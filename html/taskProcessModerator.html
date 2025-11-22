@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="../css/actionsFromModerator.css"/>
+  <link rel="stylesheet" href="../css/taskProcessModerator.css"/>
   <title>Список заявок</title>
 </head>
 <body>
@@ -172,81 +172,194 @@
             </div>
             <form action="" class="task_form">
               <div class="form_menu_categories">
-                <a href="taskProcessModerator.html" class="form_menu_category ">Подробно</a>
+                <a href="" class="form_menu_category active">Подробно</a>
                 <a href="" class="form_menu_category">Адрес</a>
                 <a href="" class="form_menu_category">Комментарии(0)</a>
-                <a href="" class="form_menu_category active">Обработка</a>
+                <a href="actionsFromModerator.html" class="form_menu_category">Обработка</a>
                 <a href="" class="form_menu_category">История изменений</a>
               </div>
               <div class="main_form_cont">
                 <div class="main_form_header">
                   <span>
-                    Действия с сообщением
+                    Действия с сообщениеем
                   </span>
+                  <div class="place_for_form_button">
+                    <button class="back_to_filters">
+                      Вернуться к фильтрам
+                    </button>
+                    <button class="list_button">
+                      Список
+                    </button>
+                    <button class="button_edit">
+                      Редактировать
+                    </button>
+                  </div>
                 </div>
                 <div class="place_for_form_data">
-                    <div class="form-row">
-                        <div class="field-label">Действия</div>
-                        <div class="field-input">
-                            <label>
-                                <input type="radio" name="official_response_status" value="moderation"> На модерацию
-                            </label>
-                            <label>
-                                <input type="radio" name="official_response_status" value="rejected"> Отклонено
-                            </label>
-                            <br>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="field-label">Публиковать результат</div>
-                        <div class="field-input">
-                            <label>
-                                <input type="radio" name="visible_to_all" value="ON"> ON
-                            </label>
-                            <label>
-                                <input type="radio" name="visible_to_all" value="OFF" checked> OFF
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="field-label">Назначен</div> 
-                        <div class="field-input">
-                            <input type="text" name="assigned" placeholder="Назначен">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="field-label">Изображения (Стало)</div>
-                        <div class="field-input">
-                            <input type="file" name="images_became" accept="image/*">
-                        </div>
-                    </div>
-
-                   <div class="form-row">
-                        <div class="field-label">Причина возврата</div>
-                        <div class="field-input">
-                            <textarea name="return_reason" placeholder="Введите причину возврата"></textarea>
-                        </div>
-                    </div>
-                    
-
-                    
-
-                    <div class="form-row">
-                        <div class="field-label">Фотографии к причине возврата</div>
-                        <div class="field-input">
-                            <input type="file" name="return_reason_photos" accept="image/*">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="field-label">Ответ в смс</div>
-                        <div class="field-input">
-                            <textarea name="sms_response" placeholder="Введите Ответ в смс"></textarea>
-                        </div>
-                    </div>
-                </div>
+                  <div class="form-row">
+                          <div class="field-label">Заголовок</div>
+                          <div class="field-input">
+                              <input type="text" name="title" class="fromMashaTitle"  value="Благоустройство">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Описание</div>
+                          <div class="field-input">
+                              <textarea name="description">Территория не благоустроена, никакие работы так и не выполнены. Всё разрыто. Уже три раза ставились сроки выполнения</textarea>
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Тип проблемы</div>
+                          <div class="field-input">
+                              <input type="text" name="problem_type" value="Благоустройство">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">ЕСИА</div>
+                          <div class="field-input">
+                              <select name="esia">
+                                  <option value="no" selected>нет</option>
+                                  <option value="yes">да</option>
+                              </select>
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Автор</div>
+                          <div class="field-input">
+                              <input type="text" name="author" value="ФИО">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Email автора</div>
+                          <div class="field-input">
+                              <input type="email" name="author_email" value="@gmail.com">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Телефон автора</div>
+                          <div class="field-input">
+                              <input type="tel" name="author_phone" value="+7">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Адрес автора</div>
+                          <div class="field-input">
+                              <input type="text" name="author_address" value="г. Нижний Новгород">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Видно всем</div>
+                          <div class="field-input">
+                              <input type="text" name="author_address" value="нет">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Публиковать результаты</div>
+                          <div class="field-input">
+                              <input type="text" name="author_address" value="нет">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Назначен</div>
+                          <div class="field-input">
+                              <input type="text" name="assigned_to" value="Аналитический центр города">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Изображение</div>
+                          <div class="field-input">
+                              <input type="file" name="image" accept="image/*">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Ссылка на вложение</div>
+                          <div class="field-input">
+                              <input type="url" name="attachment_link">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Видео</div>
+                          <div class="field-input">
+                              <input type="file" name="video" accept="video/*">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Дата создания</div>
+                          <div class="field-input">
+                              <input type="datetime-local" name="creation_date" value="2025-11-10T23:45">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Срок выполнения в нашей системе</div>
+                          <div class="field-input">
+                              <input type="datetime-local" name="deadline_system" value="2025-10-15T23:45">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Истекает через, дней</div>
+                          <div class="field-input">
+                              <input type="number" name="expires_in_days" value="6" min="0">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Нормативный срок</div>
+                          <div class="field-input">
+                              <input type="number" name="standard_term" value="6" min="0">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Внешняя система (откуда пришло)</div>
+                          <div class="field-input">
+                              <input type="text" name="external_system" value="Лобачевский">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Орган власти</div>
+                          <div class="field-input">
+                              <input type="text" name="authority">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Внешний ID (откуда пришло)</div>
+                          <div class="field-input">
+                              <input type="text" name="external_id">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Внешняя категория (откуда пришло)</div>
+                          <div class="field-input">
+                              <input type="text" name="external_category">
+                          </div>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="field-label">Ссылка на обращение</div>
+                          <div class="field-input">
+                              <input type="url" name="appeal_link">
+                          </div>
+                      </div>
+              </div>
             </form>
         </div>
       </div>
