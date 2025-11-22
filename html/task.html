@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Заявка</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .block {
+      padding: 15px;
+      border: 1px solid #bbb;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      background: #fafafa;
+    }
+    .label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    a {
+      font-size: 14px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="tasks_panel.html">← Назад к списку</a>
+
+  <div id="task-blocks"></div>
+
+  <script>
+    async function loadData() {
+      const response = await fetch("tasks.json");
+      return await response.json();
+    }
+
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+
+      const data = await loadData();
+      const item = data[id];
+
+      if (!item) {
+        document.body.innerHTML = "<h2>Заявка не найдена</h2>";
+        return;
+      }
+
+      const container = document.getElementById("task-blocks");
+
+      container.innerHTML = `
+        <div class="block">
+          <div class="label">Категория:</div>
+          <div>${item.category}</div>
+        </div>
+
+        <div class="block">
+          <div class="label">Описание:</div>
+          <div>${item.description}</div>
+        </div>
+
+        <div class="block">
+          <div class="label">Исходная заявка:</div>
+          <div>${item.original_description}</div>
+        </div>
+      `;
+    }
+
+    init();
+  </script>
+
+</body>
+</html>
