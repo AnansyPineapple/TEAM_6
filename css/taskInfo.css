@@ -1,0 +1,364 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+@font-face {
+    font-family: "Helvetica Neue_Medium";
+    src: url(../assets/fonts/HelveticaNeue-Medium.otf);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Helvetica Neue_Bold";
+    src: url(../assets/fonts/HelveticaNeue-Bold.otf);
+    font-weight: 700;
+}
+@font-face {
+    font-family: "Helvetica Neue_Light";
+    src: url(../assets/fonts/HelveticaNeue-Light.otf);
+    font-weight: 300;
+}
+
+
+body {
+    font-family: "Helvetica Neue_Medium", sans-serif;
+    background-color: #fff;
+}
+
+header {
+    font-family: "Helvetica Neue_Medium";
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: #DBDBDB 1px solid;
+}
+
+.above_menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 156px;
+    height: 100%;
+    font-size: 18px;
+
+}
+
+.user_info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+}
+
+
+
+
+
+
+.user_info > * {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    border-left: #DBDBDB 1px solid;
+    
+}
+
+.timer {
+    padding: 0 24px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    font-family: "Helvetica Neue_Light";
+
+}
+
+.user_category {
+    font-family: "Helvetica Neue_Medium";
+}
+
+.refresh_btn {
+    padding: 0 20px;
+}
+.nn_logo {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    justify-content: space-between;
+    padding-left: 27px;
+    padding-right: 35px;
+}
+
+
+.main {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+}
+.menu {
+    display: flex;
+    flex-direction: column;
+    color: #EEEEEE;
+    font-family: "Helvetica Neue_Light";
+    font-weight: 300;
+    font-size: 14px;
+    width: 240px;
+}
+.menu_link {
+    padding: 17px 0px 17px 42px;
+    background-color: #222D32;
+}
+.main_header {
+    background-color: #1E282C;
+}
+
+
+.menu_link.first {
+    padding-top: 19px;
+}
+
+.main_part {
+    background-color: #ECF0F5;
+    width: 100%;
+}
+
+.main_part .container {
+    margin: 0px 26px 0px 38px;
+}
+.messages_header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 25px;
+    padding-top: 30px;
+    padding-bottom: 16px;
+}
+
+.main_task_header {
+    font-family: "Helvetica Neue_Bold";
+    font-size: 24px;
+    color: #000;
+}
+.second_header {
+    font-family: "Helvetica Neue_Medium";
+    font-size: 18px;
+    color: #777777;
+}
+
+.task_prev_card {
+    background-color: #FFF;
+    border-top: 2px solid #18C6F1;
+    border-radius: 5px;
+}
+
+.task_prev_card_container_for_time {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: #DBDBDB 1px solid;
+    align-items: center;
+}
+
+.task_prev_card_header {
+    font-family: "Helvetica Neue_Medium";
+    font-size: 18px;
+    color: #777777;
+    padding-left: 10px;
+}
+
+.task_prev_card_time_cont {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 4px;
+    font-family: "Helvetica Neue_Light";
+    font-size: 13px;
+    padding: 6px 0px;
+
+}
+.task_prev_card_time_card {
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+}
+
+.task_prev_card_container_for_ID {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin-left: 150px;
+    gap: 20px;
+    margin-top: 10px;
+    padding-bottom: 18px;
+}
+
+.id_name {
+    font-family: "Helvetica Neue_Medium";
+    font-size: 13px;
+}
+
+
+.id_inner {
+    border: 1px solid #D2D6DE;
+    font-family: "Helvetica Neue_Light";
+    font-size: 11px;
+    width: 400px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+
+.task_form {
+    margin-top: 20px;
+    background-color: #FFF;
+    display: block;
+}
+.form_menu_categories {
+    border-bottom: #DBDBDB 1px solid;
+    font-size: 14px;
+    font-family: "Helvetica Neue_Light";
+    display: flex;
+    flex-direction: row;
+
+}
+
+.form_menu_category {
+    display: block;
+    height: 100%;
+    padding: 10px 10px 8px;
+    color:#000;
+}
+
+a.active.form_menu_category {
+    border-top: 2px solid #3C8DBC;
+    border-right: #DBDBDB 1px solid;
+}
+.form_menu_category {
+    text-decoration: none;
+}
+
+
+.main_form_cont {
+    border-radius: 5px;
+    border-top: 2px solid #00C0EF;
+    margin-left: 16px;
+    margin-right: 10px;
+    margin-top: 12px;
+}
+
+
+.main_form_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.main_form_header span {
+    font-family: "Helvetica Neue_Light";
+    font-size: 18px;
+    color: #777777;
+    padding: 10px;
+}
+
+.place_for_form_button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+    padding-right: 20px;
+}
+.place_for_form_button button {
+    display: flex;
+    justify-content: center; /* по горизонтали */
+    align-items: center;
+    height: 22px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-family: "Helvetica Neue_Light";
+    font-size: 9px;
+}
+
+
+.back_to_filters {
+    background-color: #3D9970;
+    color: #FFF;
+    border: none;
+}
+.list_button {
+    background-color: #F4F4F4;
+    color: #000000;
+    border: 1px solid #DDDDDD;
+}
+
+
+.place_for_form_data {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+    padding-right: 100px;
+    padding-left: 100px;
+}
+.form-row {
+    display: flex;
+    margin-bottom: 15px;
+    align-items: center;
+}
+.field-label {
+    width: 200px;
+    font-weight: bold;
+    margin-right: 15px;
+}
+.field-input {
+    flex: 1;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+.checkbox-container {
+    display: flex;
+    align-items: center;
+}
+.checkbox-container input {
+    width: auto;
+    margin-right: 8px;
+}
+.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto 0;
+    width: 200px;
+}
+.submit-btn:hover {
+    background-color: #45a049;
+}
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .field-label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
