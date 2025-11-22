@@ -24,7 +24,7 @@ class QueryDatabase:
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS tasks (
                 complaint_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                status TEXT NOT NULL DEFAULT 'new',
+                status TEXT NOT NULL DEFAULT 'moderated',
                 created_at DATETIME NOT NULL,
                 description TEXT NOT NULL,
                 district INTEGER,
@@ -61,6 +61,21 @@ class QueryDatabase:
         tasks = [dict(row) for row in cursor.fetchall()]
         conn.close()
         return tasks
+    
+    def update_task_status(self, complaint_id, status):
+        """Обновляет статус задачи"""
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            UPDATE tasks 
+            SET status = ?, final_status_at = ?
+            WHERE complaint_id = ?
+        ''', (status, datetime.now().isoformat(), complaint_id))
+        
+        conn.commit()
+        conn.close()
+        logger.info(f"✅ Статус задачи {complaint_id} изменен на: {status}")
 
 query_db = QueryDatabase()
 
