@@ -1,9 +1,8 @@
+// userForm.js (обновленный)
 document.querySelector(".form_container").addEventListener("submit", async (e) => {
     e.preventDefault();
     
     const description = document.getElementById("description").value;
-
-    console.log("Получено описание:", description);
 
     const data = {
         query: description
@@ -25,7 +24,8 @@ document.querySelector(".form_container").addEventListener("submit", async (e) =
 
         const result = await response.json();
         console.log("Успешный ответ:", result);
-        localStorage.setItem('form_data', JSON.stringify(result));
+        alert('Заявка успешно отправлена!');
+        document.getElementById("description").value = ''; // Очищаем поле
         
     } catch (error) {
         console.error('Error:', error);
