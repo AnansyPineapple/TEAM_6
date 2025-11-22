@@ -1,4 +1,3 @@
-# main.py (дополненный)
 import logging
 import json
 import sqlite3
@@ -114,6 +113,26 @@ def get_tasks():
         return jsonify(tasks), 200
     except Exception as e:
         logger.error(f"❌ Ошибка при получении задач: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+@flask_app.route('/tasks/<int:task_id>', methods=['GET'])
+def get_task(task_id):
+    try:
+        conn = sqlite3.connect('querys.db')
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('SELECT * FROM tasks WHERE complaint_id = ?', (task_id,))
+        task = cursor.fetchone()
+        conn.close()
+        
+        if task:
+            return jsonify(dict(task)), 200
+        else:
+            return jsonify({"error": "Task not found"}), 404
+            
+    except Exception as e:
+        logger.error(f"❌ Ошибка при получении задачи: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == "__main__":

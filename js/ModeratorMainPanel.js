@@ -15,6 +15,7 @@ async function loadTasks() {
         tasks.forEach(task => {
             const row = document.createElement('div');
             row.className = 'grid_row';
+            row.setAttribute('data-task-id', task.complaint_id);
             
             row.innerHTML = `
                 <div class="grid-cell">—</div>
@@ -35,11 +36,23 @@ async function loadTasks() {
                 <div class="grid-cell">—</div>
             `;
             
+            // Добавляем обработчик клика
+            row.addEventListener('click', function() {
+                openTaskInfo(task.complaint_id);
+            });
+            
             grid.appendChild(row);
         });
     } catch (error) {
         console.error('Ошибка при загрузке задач:', error);
     }
+}
+
+function openTaskInfo(taskId) {
+    // Сохраняем ID задачи в localStorage для использования на странице taskInfo.html
+    localStorage.setItem('currentTaskId', taskId);
+    // Переходим на страницу с информацией о задаче
+    window.location.href = 'taskInfo.html';
 }
 
 // Обновляем список каждые 30 секунд
