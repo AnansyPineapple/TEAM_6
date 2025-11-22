@@ -10,7 +10,7 @@ document.querySelector(".form_container").addEventListener("submit", async (e) =
     };
 
     try {
-        const response = await fetch('https://team-6-render.onrender.com/submit', { 
+        const response = await fetch('https://team-6-render.onrender.com/send', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

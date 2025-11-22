@@ -1,42 +1,256 @@
 import logging
 import json
+import sqlite3
+from datetime import datetime
 
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
-from datetime import datetime
 
-logging.basicConfig(level=logging.INFO)
+# Настраиваем логирование чтобы видеть все в консоли
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
 logger = logging.getLogger(__name__)
 
-flask_app = Flask(__name__) #CORS ошибки
-CORS(flask_app, resources={r"/*": {"origins": "*"}}, supports_credentials=False)
+flask_app = Flask(__name__)
+CORS(flask_app, 
+     resources={r"/*": {"origins": "*"}},  # Для разработки разрешаем все origins
+     supports_credentials=True)
 
-@flask_app.route('/submit', methods=['POST'])
-def submit():
-    try:
-        data = request.get_json()
-        if not data:
-            print("❌ Нет JSON данных в запросе")
-            return jsonify({'error': 'No JSON data provided'}), 400
+# ЗАГЛУШКА - JSON массив заявок как в базе
+APPLICATIONS_JSON = [
+    {
+        "complaint_id": 2,
+        "status": "moderated",
+        "created_at": "2024-01-16", 
+        "description": "Сломан лифт в доме 25",
+        "district": 3,
+        "resolution": None,
+        "execution_date": None,
+        "executor_id": None,
+        "final_status_at": None,
+        "deadline": None
+    }
+]
+
+class QueryDatabase:
+    def __init__(self, db_name='querys.db'):
+        self.db_name = db_name
+        self._init_db()
+    
+    def _init_db(self):
+        """Инициализация базы данных и таблицы"""
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
         
-        # Получаем описание из запроса
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS tasks (
+                complaint_id INTEGER PRIMARY KEY,
+                status TEXT NOT NULL,
+                created_at DATE NOT NULL,
+                description TEXT NOT NULL,
+                district INTEGER NOT NULL,
+                resolution TEXT,
+                execution_date DATE,
+                executor_id INTEGER,
+                final_status_at DATE,
+                deadline DATE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE INDEX IF NOT EXISTS idx_tasks_status_deadline 
+            ON tasks(status, deadline) WHERE status = 'closed_with_promise'
+        ''')
+        
+        # ЗАГРУЗКА ДАННЫХ ИЗ JSON В БАЗУ
+        for app in APPLICATIONS_JSON:
+            cursor.execute('''
+                INSERT OR REPLACE INTO tasks 
+                (complaint_id, status, created_at, description, district, resolution, execution_date, executor_id, final_status_at, deadline)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                app['complaint_id'], app['status'], app['created_at'], app['description'], 
+                app['district'], app['resolution'], app['execution_date'], app['executor_id'],
+                app['final_status_at'], app['deadline']
+            ))
+        
+        conn.commit()
+        conn.close()
+        logger.info(f"✅ База данных {self.db_name} инициализирована с тестовыми данными")
+    
+    def get_closed_with_promise_tasks(self):
+        """Получает все closed_with_promise задачи отсортированные по дедлайну"""
+        conn = sqlite3.connect(self.db_name)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT * FROM tasks 
+            WHERE status = 'closed_with_promise'
+            ORDER BY deadline ASC, created_at ASC
+        ''')
+        
+        tasks = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        return tasks
+    
+    def mark_as_completed(self, complaint_id, resolution=None, executor_id=None):
+        """Помечает задачу как выполненную"""
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            UPDATE tasks 
+            SET status = 'completed', 
+                resolution = ?,
+                executor_id = ?,
+                execution_date = ?,
+                final_status_at = ?
+            WHERE complaint_id = ?
+        ''', (
+            resolution, 
+            executor_id, 
+            datetime.now().date().isoformat(),
+            datetime.now().date().isoformat(),
+            complaint_id
+        ))
+        
+        conn.commit()
+        conn.close()
+        logger.info(f"✅ Задача {complaint_id} помечена как выполненная")
+    
+    def get_task_stats(self):
+        """Получает статистику по задачам"""
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT 
+                status,
+                COUNT(*) as count,
+                MAX(created_at) as last_created
+            FROM tasks 
+            GROUP BY status
+        ''')
+        
+        stats = {}
+        for row in cursor.fetchall():
+            stats[row[0]] = {
+                'count': row[1],
+                'last_created': row[2]
+            }
+        
+        conn.close()
+        return stats
+    
+    def get_next_task(self):
+        """Получает следующую задачу для обработки (самый ближайший дедлайн)"""
+        conn = sqlite3.connect(self.db_name)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT * FROM tasks 
+            WHERE status = 'closed_with_promise'
+            ORDER BY deadline ASC
+            LIMIT 1
+        ''')
+        
+        task = cursor.fetchone()
+        conn.close()
+        
+        if task:
+            return dict(task)
+        return None
+
+    def get_all_tasks(self):
+        """Получает все задачи"""
+        conn = sqlite3.connect(self.db_name)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('SELECT * FROM tasks ORDER BY deadline ASC')
+        tasks = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        return tasks
+
+# Инициализируем базу данных
+query_db = QueryDatabase()
+
+@flask_app.after_request
+def after_request(response):
+    origin = request.headers.get('Origin')
+    if origin:
+        response.headers.set('Access-Control-Allow-Origin', origin)
+    else:
+        response.headers.set('Access-Control-Allow-Origin', '*')
+    
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
+@flask_app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = make_response()
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Headers", "*")
+        response.headers.add("Access-Control-Allow-Methods", "*")
+        return response
+
+@flask_app.route('/send', methods=['POST', 'OPTIONS'])
+@cross_origin()
+def send():
+    try:
+        # Для OPTIONS запросов возвращаем пустой ответ
+        if request.method == 'OPTIONS':
+            response = make_response()
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.headers.add('Access-Control-Allow-Headers', '*')
+            response.headers.add('Access-Control-Allow-Methods', '*')
+            return response
+        
+        # Получаем JSON данные из запроса
+        data = request.get_json()
+        
+        # Проверяем, что данные получены
+        if not data:
+            logger.error("❌ Получен пустой запрос или не JSON данные")
+            return jsonify({"error": "No JSON data received"}), 400
+        
+        # Извлекаем описание из данных
         description = data.get('query')
         
-        logger.info("🚗 ПОЛУЧЕН ЗАПРОС НА ГЕНЕРАЦИЮ МАРШРУТА:")
-        logger.info(f"   Описание: {description}")
-        logger.info("=" * 50)
+        if not description:
+            logger.error("❌ Отсутствует поле 'query' в данных")
+            return jsonify({"error": "Missing 'query' field"}), 400
         
-        # Пока просто сохраним как опрос
-        result = {
-            "answer": description,
+        logger.info(f"✅ Получено описание: {description}")
+        
+        # Здесь можно добавить вашу логику обработки описания
+        # Например, сохранение в базу данных, обработка и т.д.
+        
+        # Формируем ответ
+        response_data = {
+            "status": "success",
+            "message": "Данные успешно получены",
+            "received_query": description,
+            "timestamp": datetime.now().isoformat()
         }
-
-        response = jsonify(result)
-        return response
         
+        response = jsonify(response_data)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response, 200
+    
     except Exception as e:
-        logger.error(f"❌ Ошибка обработки: {e}")
-        return jsonify({"status": "error", "message": str(e)}), 500
+        logger.error(f"❌ Ошибка при обработке запроса: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == "__main__":
-    flask_app.run(host="0.0.0.0", port=10000)
+
+    # Запускаем с debug=True чтобы видеть больше информации
+    flask_app.run(host="0.0.0.0", port=10000, debug=True)
