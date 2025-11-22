@@ -7,17 +7,11 @@ from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 
 # Настраиваем логирование чтобы видеть все в консоли
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler()]
-)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 flask_app = Flask(__name__)
-CORS(flask_app, 
-     resources={r"/*": {"origins": "*"}},  # Для разработки разрешаем все origins
-     supports_credentials=True)
+CORS(flask_app)
 
 # ЗАГЛУШКА - JSON массив заявок как в базе
 APPLICATIONS_JSON = [
@@ -180,49 +174,18 @@ class QueryDatabase:
 # Инициализируем базу данных
 query_db = QueryDatabase()
 
-@flask_app.after_request
-def after_request(response):
-    origin = request.headers.get('Origin')
-    if origin:
-        response.headers.set('Access-Control-Allow-Origin', origin)
-    else:
-        response.headers.set('Access-Control-Allow-Origin', '*')
-    
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    return response
-
-@flask_app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        response = make_response()
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add("Access-Control-Allow-Headers", "*")
-        response.headers.add("Access-Control-Allow-Methods", "*")
-        return response
-
 @flask_app.route('/send', methods=['POST', 'OPTIONS'])
-@cross_origin()
 def send():
+    if request.method == 'OPTIONS':
+        return '', 200
+    
     try:
-        # Для OPTIONS запросов возвращаем пустой ответ
-        if request.method == 'OPTIONS':
-            response = make_response()
-            response.headers.add('Access-Control-Allow-Origin', '*')
-            response.headers.add('Access-Control-Allow-Headers', '*')
-            response.headers.add('Access-Control-Allow-Methods', '*')
-            return response
-        
-        # Получаем JSON данные из запроса
         data = request.get_json()
         
-        # Проверяем, что данные получены
         if not data:
             logger.error("❌ Получен пустой запрос или не JSON данные")
             return jsonify({"error": "No JSON data received"}), 400
         
-        # Извлекаем описание из данных
         description = data.get('query')
         
         if not description:
@@ -231,10 +194,6 @@ def send():
         
         logger.info(f"✅ Получено описание: {description}")
         
-        # Здесь можно добавить вашу логику обработки описания
-        # Например, сохранение в базу данных, обработка и т.д.
-        
-        # Формируем ответ
         response_data = {
             "status": "success",
             "message": "Данные успешно получены",
@@ -242,15 +201,11 @@ def send():
             "timestamp": datetime.now().isoformat()
         }
         
-        response = jsonify(response_data)
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response, 200
+        return jsonify(response_data), 200
     
     except Exception as e:
         logger.error(f"❌ Ошибка при обработке запроса: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == "__main__":
-
-    # Запускаем с debug=True чтобы видеть больше информации
     flask_app.run(host="0.0.0.0", port=10000, debug=True)
