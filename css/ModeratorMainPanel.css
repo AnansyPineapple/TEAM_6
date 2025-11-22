@@ -41,7 +41,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 240px;
+    width: 156px;
     height: 100%;
     font-size: 18px;
 
@@ -127,22 +127,22 @@ header {
     font-family: Arial, sans-serif;
     font-size: 13px;
     width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    border-bottom: 1px solid #ddd;
     overflow: hidden;
+    margin-top: 30px;
+    
   }
 
   .grid_header, .grid_row{
     display: flex;
     flex-direction: row;
-    padding: 8px 10px;
     border-bottom: 1px solid #eee;
   }
 
   .grid_header {
-    background-color: #f3f3f3;
-    font-weight: 600;
+    padding-bottom: 5px;
   }
+
 
   .grid_row:last-child {
     border-bottom: none;
@@ -151,9 +151,6 @@ header {
   .grid-cell {
     flex: 1;
     padding: 2px 6px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .grid-row:hover {
